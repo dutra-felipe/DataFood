@@ -24,12 +24,29 @@ services:
     ports:
       - "5432:5432"
     volumes:
+      - ./database-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U challenge -d challenge_db"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  data-generator:
+    build: .
+    container_name: nola_data_gen
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://challenge:challenge_2024@postgres:5432/challenge_db
+    command: >
+      sh -c "
+        echo 'Waiting for database...' &&
+        sleep 5 &&
+        echo 'Generating data...' &&
+        python generate_data.py --db-url postgresql://challenge:challenge_2024@postgres:5432/challenge_db
+      "
 
 volumes:
   postgres_data:

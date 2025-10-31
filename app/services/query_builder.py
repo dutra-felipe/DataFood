@@ -76,6 +76,7 @@ FIELD_MAP = {
     "product_name": products.c.name,
     "payment_type": payment_types.c.description,
     "sale_status": sales.c.sale_status_desc,
+    "sale_date": func.date(sales.c.created_at),
     
     # Dimensões calculadas (extraídas da data)
     # 'isodow' é o padrão ISO: 1=Segunda, 7=Domingo
@@ -213,6 +214,8 @@ class QueryBuilder:
         Adiciona um JOIN à query se a tabela da coluna ainda não foi incluída.
         Lida com joins simples e múltiplos.
         """
+        if not hasattr(column, 'table'):
+            return
         target_table = column.table
         if target_table in self.joined_tables:
             return

@@ -15,6 +15,7 @@ class DimensionField(str, Enum):
     STORE_NAME = "store_name"
     PAYMENT_TYPE = "payment_type"
     SALE_STATUS = "sale_status"
+    SALE_DATE = "sale_date"
     DAY_OF_WEEK = "day_of_week" # Ex: Segunda, Terça
     HOUR_OF_DAY = "hour_of_day" # Ex: 19h, 20h
 
