@@ -1,7 +1,9 @@
 import { AnalyticsPage } from './pages/AnalyticsPage';
-import './App.css'; // O Vite criou este arquivo, podemos deixá-lo
+import './App.css';
+import { useTheme } from './hooks/useTheme';
 
 function App() {
+  useTheme();
   return (
     <AnalyticsPage />
   );

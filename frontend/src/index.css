@@ -1,25 +1,41 @@
-/* frontend/src/index.css */
-:root {
-  /* Paleta de Cores */
-  --color-primary: #4A6FFF; /* Um azul mais vibrante */
-  --color-primary-hover: #3a59d1;
-  --color-text: #212529;
-  --color-text-muted: #6c757d;
-  --color-bg: #f8f9fa; /* Fundo principal */
-  --color-white: #ffffff;
-  --color-border: #dee2e6;
-  --color-light-gray: #f1f3f5;
-  --color-green: #28a745;
-  --color-red: #dc3545;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-  /* Fontes */
+:root {
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: #eff6ff;
+  --color-text: #111827;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-bg: #f9fafb;
+  --color-bg-light: #f3f4f6;
+  --color-white: #ffffff;
+  --color-green: #10b981;
+  --color-red: #ef4444;
+  --color-yellow: #f59e0b;
+
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* Reset básico */
   margin: 0;
   box-sizing: border-box;
+
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+[data-theme="dark"] {
+  --color-primary: #60a5fa;
+  --color-primary-hover: #93c5fd;
+  --color-primary-light: #1f2937;
+  --color-text: #f3f4f6;
+  --color-text-muted: #9ca3af;
+  --color-border: #374151;
+  --color-bg: #111827;
+  --color-bg-light: #1f2937;
+  --color-white: #1f2937;
+  --color-green: #34d399;
+  --color-red: #f87171;
+  --color-yellow: #fbbf24;
 }
 
 body {

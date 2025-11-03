@@ -58,6 +58,28 @@ const apiClient = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+export type SelectOption = {
+  id: string | number;
+  name: string;
+};
+
+// Busca Canais e Status (listas de strings simples)
+const fetchSimpleOptions = async (endpoint: string): Promise<SelectOption[]> => {
+  const { data } = await apiClient.get(endpoint);
+  return data.data.map((item: string) => ({ id: item, name: item }));
+};
+
+// Busca Lojas e Produtos (listas de objetos {id, name})
+const fetchObjectOptions = async (endpoint: string): Promise<SelectOption[]> => {
+  const { data } = await apiClient.get(endpoint);
+  return data.data;
+};
+
+export const fetchChannelOptions = () => fetchSimpleOptions('/options/channels');
+export const fetchStatusOptions = () => fetchSimpleOptions('/options/sale_status');
+export const fetchStoreOptions = () => fetchObjectOptions('/options/stores');
+export const fetchProductOptions = () => fetchObjectOptions('/options/products');
+
 export const fetchAnalyticsData = async (query: AnalyticsQuery): Promise<ApiResponse> => {
   const { data } = await apiClient.post('/query', query);
   return data;

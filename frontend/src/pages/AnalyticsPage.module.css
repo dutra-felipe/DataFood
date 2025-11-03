@@ -62,6 +62,27 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: 2rem;
+  gap: 1rem;
+  align-items: center;
+}
+
+.exportButton {
+  background-color: var(--color-white);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5625rem 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.exportButton:hover {
+  border-color: #aaa;
+  background-color: var(--color-bg);
 }
 
 .runButton {
@@ -141,4 +162,19 @@
   color: var(--color-text-muted);
   font-style: italic;
   border: 1px dashed var(--color-border);
+}
+
+.resultsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* Para quebrar em telas pequenas */
+  gap: 1rem;
+}
+
+.resultsTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0; /* Remove a margem antiga */
 }

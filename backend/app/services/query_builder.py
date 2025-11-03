@@ -73,7 +73,7 @@ FIELD_MAP = {
     # Dimensões diretas de tabelas
     "store_name": stores.c.name,
     "channel_name": channels.c.name,
-    "product_name": products.c.name,
+    "product_name": products.c.id,
     "payment_type": payment_types.c.description,
     "sale_status": sales.c.sale_status_desc,
     "sale_date": func.date(sales.c.created_at),
@@ -123,7 +123,10 @@ class QueryBuilder:
         selections = []
 
         for dim_enum in self.request.dimensions:
-            column = FIELD_MAP.get(dim_enum.value)
+            if dim_enum.value == "product_name":
+                column = products.c.name 
+            else:
+                column = FIELD_MAP.get(dim_enum.value)
             if column is not None:
                 selections.append(column.label(dim_enum.value))
                 self._ensure_join(column)
@@ -138,7 +141,6 @@ class QueryBuilder:
             if metric.function == MetricFunction.SUM:
                 sql_func = func.sum(column_to_agg).label(alias)
             elif metric.function == MetricFunction.COUNT:
-                # Usamos COUNT DISTINCT no id para evitar contagens duplicadas por joins
                 sql_func = func.count(func.distinct(column_to_agg)).label(alias)
             elif metric.function == MetricFunction.AVG:
                 sql_func = func.avg(column_to_agg).label(alias)
@@ -161,10 +163,36 @@ class QueryBuilder:
         if not self.request.filters:
             return
 
+        NUMERIC_FIELDS = [
+            'product_name',
+            'store_name',
+            'hour_of_day'
+        ]
+
         for f in self.request.filters:
             column = FIELD_MAP.get(f.field)
             if column is None:
                 continue
+
+            op = f.operator
+            value = f.value
+            
+            if op == "in":
+                if isinstance(value, str):
+                    value_list = [item.strip() for item in value.split(',')]
+                    value = [item for item in value_list if item]
+                
+                if isinstance(value, list) and f.field in NUMERIC_FIELDS:
+                    try:
+                        value = [int(v) for v in value]
+                    except (ValueError, TypeError):
+                        continue
+
+            elif f.field in NUMERIC_FIELDS:
+                try:
+                    value = int(value)
+                except (ValueError, TypeError):
+                    continue
 
             op_map = {
                 "equals": lambda c, v: c == v,
@@ -174,10 +202,13 @@ class QueryBuilder:
                 "in": lambda c, v: c.in_(v),
             }
             
-            if f.operator in op_map:
-                condition = op_map[f.operator](column, f.value)
-                self.query = self.query.where(condition)
-                self._ensure_join(column)
+            if op in op_map and value is not None:
+                try:
+                    condition = op_map[op](column, value)
+                    self.query = self.query.where(condition)
+                    self._ensure_join(column)
+                except Exception:
+                    continue
 
     def _apply_group_by(self):
         """Adiciona a cláusula GROUP BY se houver dimensões na requisição."""
