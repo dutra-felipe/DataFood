@@ -1,4 +1,3 @@
-/* frontend/src/pages/AnalyticsPage.module.css */
 .container {
   padding: 2rem;
   max-width: 1300px;
@@ -23,7 +22,7 @@
 
 .controlsGrid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr); /* Mobile-first */
+  grid-template-columns: repeat(1, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
@@ -32,7 +31,6 @@
   border: 1px solid var(--color-border);
 }
 
-/* Em telas maiores, usamos 4 colunas */
 @media (min-width: 1024px) {
   .controlsGrid {
     grid-template-columns: repeat(4, 1fr);
@@ -151,7 +149,6 @@
   border: 1px solid var(--color-border);
 }
 
-/* Placeholder (ainda precisamos dele para os filtros) */
 .controlPlaceholder {
   height: 80px;
   background-color: var(--color-light-gray);
@@ -169,12 +166,53 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  flex-wrap: wrap; /* Para quebrar em telas pequenas */
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
 .resultsTitle {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 0; /* Remove a margem antiga */
+  margin-bottom: 0;
+}
+
+.container > :global(button[class*="toggleButton"]) {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.selectWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.selectLabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.selectInput,
+.limitInput {
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  color: var(--color-text);
+  height: 44px;
+}
+
+.limitInput {
+  width: 80px;
 }

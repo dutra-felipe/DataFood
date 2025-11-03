@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background-color: var(--color-white);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-right: 0.5rem;
+}
+
+.dateInput {
+  width: 130px;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.dateInput:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.presetButton {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.presetButton:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}

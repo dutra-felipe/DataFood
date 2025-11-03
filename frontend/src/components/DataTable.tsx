@@ -1,5 +1,10 @@
-// frontend/src/components/DataTable.tsx
 import styles from './DataTable.module.css';
+import { FRIENDLY_NAMES } from '../services/api';
+
+
+const translateHeader = (header: string) => {
+  return FRIENDLY_NAMES[header] || header;
+};
 
 type DataTableProps = {
   data: any[];
@@ -12,14 +17,13 @@ export function DataTable({ data }: DataTableProps) {
 
   const headers = Object.keys(data[0]);
 
-  // --- ADICIONADO O WRAPPER ---
   return (
     <div className={styles.tableWrapper}> 
       <table className={styles.table}>
         <thead>
           <tr>
             {headers.map((header) => (
-              <th key={header}>{header}</th>
+              <th key={header}>{translateHeader(header)}</th>
             ))}
           </tr>
         </thead>

@@ -84,3 +84,19 @@ export const fetchAnalyticsData = async (query: AnalyticsQuery): Promise<ApiResp
   const { data } = await apiClient.post('/query', query);
   return data;
 };
+
+export const FRIENDLY_NAMES: Record<string, string> = {
+  product_name: 'Produto',
+  channel_name: 'Canal',
+  store_name: 'Loja',
+  payment_type: 'Tipo de Pagamento',
+  sale_status: 'Status',
+  day_of_week: 'Dia da Semana',
+  hour_of_day: 'Hora',
+  sale_date: 'Data',
+
+  faturamento: 'Faturamento',
+  pedidos: 'Pedidos',
+  ticket_medio: 'Ticket Médio',
+  taxa_entrega: 'Taxa de Entrega',
+};

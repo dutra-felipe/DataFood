@@ -71,7 +71,7 @@ payment_types = Table('payment_types', metadata,
 # com as colunas e expressões SQL do banco de dados.
 FIELD_MAP = {
     # Dimensões diretas de tabelas
-    "store_name": stores.c.name,
+    "store_name": stores.c.id,
     "channel_name": channels.c.name,
     "product_name": products.c.id,
     "payment_type": payment_types.c.description,
@@ -124,7 +124,9 @@ class QueryBuilder:
 
         for dim_enum in self.request.dimensions:
             if dim_enum.value == "product_name":
-                column = products.c.name 
+                column = products.c.name
+            elif dim_enum.value == "store_name":
+                column = stores.c.name
             else:
                 column = FIELD_MAP.get(dim_enum.value)
             if column is not None:

@@ -48,9 +48,16 @@ services:
         echo 'Waiting for database...' &&
         sleep 5 &&
         echo 'Generating data...' &&
-        python generate_data.py --db-url postgresql://challenge:challenge_2024@postgres:5432/challenge_db
+        python generate_data.py --db-url postgresql://challenge:challenge_2024@postgres:5432/challenge_db &&
+        
+        echo '--- DATA GENERATED ---' &&
+        echo 'Waiting 5s before creating indexes...' &&
+        sleep 5 &&
+        
+        echo 'Connecting to DB to create indexes...' &&
+        psql -U challenge -d challenge_db -f /app/02-indices.sql &&
+        echo '--- INDEXES CREATED ---'
       "
-
 volumes:
   postgres_data:
     driver: local
