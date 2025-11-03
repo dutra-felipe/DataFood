@@ -1,11 +1,32 @@
-__pycache__/
-*.pyc
-venv/
-.venv/
-backend/.env
-
-node_modules/
-frontend/dist/
-frontend/.vite/
-
 .DS_Store
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+.vscode/*
+!.vscode/extensions.json
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.idea/
+*.local
+
+# backend
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.env # Ignora o arquivo .env que está dentro da pasta backend
+
+# frontend
+frontend/node_modules/ 
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/

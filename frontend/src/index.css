@@ -1,0 +1,32 @@
+/* frontend/src/index.css */
+:root {
+  /* Paleta de Cores */
+  --color-primary: #4A6FFF; /* Um azul mais vibrante */
+  --color-primary-hover: #3a59d1;
+  --color-text: #212529;
+  --color-text-muted: #6c757d;
+  --color-bg: #f8f9fa; /* Fundo principal */
+  --color-white: #ffffff;
+  --color-border: #dee2e6;
+  --color-light-gray: #f1f3f5;
+  --color-green: #28a745;
+  --color-red: #dc3545;
+
+  /* Fontes */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Reset básico */
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
