@@ -1,13 +1,10 @@
-// frontend/src/services/api.ts
 import axios from 'axios';
 
-// MetricFunction
 export const MetricFunction = {
   SUM: "sum", COUNT: "count", AVG: "avg",
 } as const;
 export type MetricFunction = typeof MetricFunction[keyof typeof MetricFunction];
 
-// DimensionField
 export const DimensionField = {
   PRODUCT_NAME: "product_name", CHANNEL_NAME: "channel_name",
   STORE_NAME: "store_name", PAYMENT_TYPE: "payment_type",
@@ -16,7 +13,6 @@ export const DimensionField = {
 } as const;
 export type DimensionField = typeof DimensionField[keyof typeof DimensionField];
 
-// FilterOperator
 export const FilterOperator = {
   EQUALS: "equals", NOT_EQUALS: "not_equals",
   GREATER_THAN: "greater_than", LESS_THAN: "less_than",
@@ -24,13 +20,11 @@ export const FilterOperator = {
 } as const;
 export type FilterOperator = typeof FilterOperator[keyof typeof FilterOperator];
 
-// SortDirection
 export const SortDirection = {
   ASC: "asc", DESC: "desc",
 } as const;
 export type SortDirection = typeof SortDirection[keyof typeof SortDirection];
 
-// Interfaces
 export interface Metric {
   field: string; function: MetricFunction; alias?: string;
 }
@@ -52,7 +46,6 @@ export interface ApiResponse {
   data: any[];
 }
 
-// API Client
 const apiClient = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' },
@@ -63,13 +56,11 @@ export type SelectOption = {
   name: string;
 };
 
-// Busca Canais e Status (listas de strings simples)
 const fetchSimpleOptions = async (endpoint: string): Promise<SelectOption[]> => {
   const { data } = await apiClient.get(endpoint);
   return data.data.map((item: string) => ({ id: item, name: item }));
 };
 
-// Busca Lojas e Produtos (listas de objetos {id, name})
 const fetchObjectOptions = async (endpoint: string): Promise<SelectOption[]> => {
   const { data } = await apiClient.get(endpoint);
   return data.data;

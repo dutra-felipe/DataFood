@@ -1,137 +1,139 @@
-# DataFood Analytics API - Desafio God Level
+# DataFood Analytics - Desafio God Level Coder - Nola
 
-Esta é a implementação do backend para o desafio God Level Coder, que consiste em uma API de analytics customizável para donos de restaurantes. O objetivo é fornecer uma ferramenta poderosa para que usuários não-técnicos possam explorar seus dados operacionais de forma flexível e performática.
+Esta é a solução completa para o desafio de criar uma plataforma de analytics customizável para donos de restaurantes, inspirada na persona Maria e suas dores de negócio.
+
+O projeto consiste em uma API de backend performática (Python/FastAPI) e uma interface de frontend moderna e reativa (React/Vite) que permite a exploração de dados de forma flexível e intuitiva, sem a necessidade de conhecimento técnico.
 
 ## Stack Tecnológico
 
-* **Linguagem:** Python 3.11
-* **Framework:** FastAPI
-* **Banco de Dados:** PostgreSQL
-* **ORM / Acesso a Dados:** SQLAlchemy Core
-* **Validação de Dados:** Pydantic
-* **Ambiente:** Docker & Docker Compose
+* **Backend:** Python, FastAPI, SQLAlchemy Core, PostgreSQL.
+* **Frontend:** React, TypeScript, Vite, React Query, CSS Modules.
+* **Ambiente de Dev:** Docker Compose (para serviços de backend) e NVM/NPM (para frontend local).
 
-## Arquitetura
+## Estrutura do Projeto (Monorepo)
 
-A principal decisão arquitetural foi a criação de um único e poderoso endpoint, `POST /api/query`, em vez de múltiplos endpoints REST tradicionais (`/sales`, `/products`, etc.).
+O projeto é organizado como um monorepo para facilitar o desenvolvimento integrado:
 
-Esta abordagem foi escolhida por três motivos:
-1.  **Performance:** Toda a lógica de agregação, junção e filtragem de dados ocorre no servidor e no banco de dados, que são otimizados para essa tarefa. Apenas o resultado final e consolidado é enviado para o cliente.
-2.  **Flexibilidade:** Permite que o frontend construa uma infinidade de consultas analíticas combinando métricas, dimensões e filtros, sem a necessidade de modificar o backend.
-3.  **Manutenibilidade:** A lógica de negócio fica centralizada em um `QueryBuilder`, facilitando a otimização de consultas e a adição de novas métricas ou dimensões no futuro.
+```
+/
+├── 📂backend/       (Contém a API FastAPI, Dockerfile e scripts SQL)
+├── 📂frontend/      (Contém a aplicação React/Vite)
+├── 📜docker-compose.yml (Orquestra APENAS os serviços de backend)
+└── 📜README.md        (Este arquivo)
+```
 
-## Como Executar a Aplicação
+---
 
-Siga os passos abaixo para construir e executar todo o ambiente (API, Banco de Dados e Gerador de Dados) localmente.
+## 🚀 Guia de Instalação e Execução (Modo Híbrido)
+
+Para a melhor experiência de desenvolvimento (com *hot-reloading* instantâneo), rodaremos os serviços de backend (API + Banco) no Docker e o frontend localmente no seu terminal.
+
+**Você precisará de dois terminais abertos.**
 
 ### Pré-requisitos
+
 * Git
 * Docker e Docker Compose
+* [NVM](https://github.com/nvm-sh/nvm) (Node Version Manager) - *Recomendado para gerenciar a versão do Node.js*
 
-### Passo a Passo
+---
 
-1.  **Clone o Repositório:**
+### Terminal 1: Backend (API + Banco de Dados)
+
+Neste terminal, inicie os serviços que rodam no Docker.
+
+1.  **Clone o repositório:**
     ```bash
     git clone https://github.com/dutra-felipe/DataFood.git
-    cd DataFood
+    cd DataFood/
     ```
 
-2.  **Setup Inicial (Primeira Execução)**
-    Estes comandos irão construir a imagem Docker, criar e popular o banco de dados.
-
-    **Construa a Imagem e Inicie o Banco de Dados:**
-
+2.  **Inicie o Banco de Dados:**
+    Este comando inicia *apenas* o container do PostgreSQL em segundo plano.
     ```bash
-    docker compose up -d --build postgres
+    docker compose up -d postgres
     ```
-    * `--build`: Constrói a imagem da sua aplicação a partir do `Dockerfile`.
-    * `-d`: Roda o banco de dados em segundo plano (detached).
 
-    **Popule o Banco de Dados:**
-
-    Este é o passo demorado (5-15 minutos). Ele executa o script que gera 500.000 registros de vendas.
-
+3.  **Gere os Dados e Crie os Índices (Apenas na 1ª vez):**
+    Este é o passo mais demorado (10-15 minutos). Ele executa o script `generate_data.py` (populando ~500k de vendas) e, em seguida, executa o script `02-indices.sql` para otimizar o banco.
     ```bash
     docker compose run --rm data-generator
     ```
 
-    **Verifique se os Dados Foram Criados (Opcional):**
+4.  **Inicie a API do Backend:**
+    Este comando inicia a API do FastAPI. Ele também iniciará o `postgres` automaticamente (pois há um `depends_on`), mas **ignora** o `data-generator`.
 
     ```bash
-    docker compose exec postgres psql -U challenge challenge_db -c "SELECT COUNT(*) FROM sales;"
+    docker compose up api
     ```
-    *Você deverá ver uma contagem de ~500.000.*
+
+**Deixe este terminal rodando.** Você verá os logs da API FastAPI.
 
 ---
-## Como Testar a API
 
-A forma mais fácil de testar a API é através da documentação interativa gerada automaticamente pelo FastAPI.
+### Terminal 2: Frontend (Aplicação React)
 
-1.  **Acesse a Documentação:**
-    Com a aplicação rodando, abra seu navegador e acesse: [http://localhost:8000/docs](http://localhost:8000/docs)
+Neste terminal, rode a aplicação React localmente.
 
-2.  **Execute uma Consulta de Exemplo:**
-    * Clique na seção do endpoint `POST /api/query` para expandi-la.
-    * Clique no botão **"Try it out"**.
-    * No campo "Request body", cole o JSON abaixo. Esta consulta responde à pergunta: "Quais são os 5 produtos mais vendidos (em quantidade de pedidos) nas quintas-feiras à noite no iFood?"
-        ```json
-        {
-          "metrics": [
-            {
-              "field": "sale_id",
-              "function": "count",
-              "alias": "quantidade_pedidos"
-            }
-          ],
-          "dimensions": [
-            "product_name"
-          ],
-          "filters": [
-            {
-              "field": "channel_name",
-              "operator": "equals",
-              "value": "iFood"
-            },
-            {
-              "field": "day_of_week",
-              "operator": "equals",
-              "value": 4
-            },
-            {
-              "field": "hour_of_day",
-              "operator": "greater_than",
-              "value": 18
-            }
-          ],
-          "order_by": {
-            "field": "quantidade_pedidos",
-            "direction": "desc"
-          },
-          "limit": 5
-        }
-        ```
-    * Clique no botão azul **"Execute"**.
+1.  **Navegue até a pasta do frontend:**
+    ```bash
+    cd frontend/
+    ```
 
-    Você deverá receber uma resposta com código `200` e os dados dos 5 produtos mais vendidos que correspondem aos critérios.
+2.  **Ative a Versão Correta do Node:**
+    Usamos o NVM para garantir que você está usando a versão LTS (Estável) do Node, o que evita erros de compilação do Vite.
+    ```bash
+    nvm use --lts
+    ```
 
-## Estrutura do Projeto
+3.  **Instale as Dependências:**
+    (Se for a primeira vez ou se o `package.json` mudou).
+    ```bash
+    npm install
+    ```
 
-```
-┣ 📂app                        # Contém todo o código-fonte da aplicação FastAPI.
-┃ ┣ 📂core                     # Configurações globais (variáveis de ambiente).
-┃ ┃ ┗ 📜config.py
-┃ ┣ 📂services                 # Lógica de negócio (o QueryBuilder).
-┃ ┃ ┗ 📜query_builder.py
-┃ ┣ 📜__init__.py
-┃ ┣ 📜database.py              # Configuração da conexão com o banco.
-┃ ┣ 📜main.py                  # Definição dos endpoints da API.
-┃ ┗ 📜schemas.py               # Modelos Pydantic para validação de dados.
-┣ 📜.env                       # Arquivo para variáveis de ambiente (ignorado pelo Git).
-┣ 📜.gitignore
-┣ 📜database-schema.sql        # Script para criação das tabelas
-┣ 📜docker-compose.yml         # Orquestra a execução da API e do banco de dados.
-┣ 📜Dockerfile                 # Receita para construir a imagem Docker da aplicação.
-┣ 📜generate_data.py           # Gerador dos dados para povoamento do banco de dados
-┣ 📜README.md
-┗ 📜requirements.txt
-```
+4.  **Inicie o Servidor de Desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+
+**Deixe este terminal rodando.** Você verá a saída do Vite.
+
+---
+
+## ✅ Como Acessar a Aplicação
+
+Se tudo correu bem, sua aplicação completa está no ar:
+
+* **Aplicação Frontend:** [http://localhost:5173](http://localhost:5173)
+    *(É aqui que você usará a ferramenta).*
+* **Backend (API Docs):** [http://localhost:8000/docs](http://localhost:8000/docs)
+    *(Para testar os endpoints do backend).*
+* **Banco de Dados:** `localhost:5432`
+    *(Para conectar com o DBeaver ou similar. Credenciais: `challenge` / `challenge_2024` / `challenge_db`).*
+
+---
+
+## 🧠 Decisões Arquiteturais Chave
+
+Esta seção documenta as principais decisões tomadas para atender aos critérios de avaliação (`Pensamento arquitetural`, `Performance e escala`).
+
+1.  **API com "Query Builder" (`POST /api/query`)**
+    * **Decisão:** Em vez de criar dezenas de endpoints REST (ex: `/sales/by-store`), criei um único endpoint que recebe um JSON descrevendo a análise.
+    * **Justificativa:** Isso dá `flexibilidade total` (o frontend pode "inventar" novas consultas sem mudar o backend) e `performance` (o backend monta uma única query SQL otimizada, fazendo a agregação no banco de dados, não no cliente).
+
+2.  **Fluxo de Desenvolvimento Híbrido**
+    * **Decisão:** Otimizar o ambiente Docker para serviços (Banco, API) e usar o ambiente local (NPM) para a UI.
+    * **Justificativa:** O desenvolvimento de UI exige recarregamento rápido (hot-reload). A camada de sincronização de volumes do Docker para `node_modules` (especialmente entre WSL e Windows) é notoriamente lenta e propensa a erros. Esta abordagem dá a estabilidade do Docker para o backend e a velocidade nativa para o frontend.
+
+3.  **Filtros Inteligentes (com Endpoints de Opções)**
+    * **Decisão:** O backend expõe rotas `GET /api/options/...` (ex: `/channels`, `/stores`) que listam as opções de filtro disponíveis.
+    * **Justificativa:** Para ser `simples o suficiente para usar sem treinamento técnico`, a Maria não pode adivinhar o ID de uma loja. O frontend usa esses endpoints para popular dropdowns dinamicamente, transformando o "campo de valor" de um `input` de texto para um `<select>`, guiando o usuário e prevenindo erros.
+
+4.  **Indexação Explícita do Banco**
+    * **Decisão:** Adicionar um script (`02-indices.sql`) que cria índices em todas as Chaves Estrangeiras (`store_id`, `channel_id`, `product_id`, etc.) e colunas de filtro (`created_at`).
+    * **Justificativa:** Os logs de teste mostraram que as consultas `JOIN` em 500k de registros levavam de 5 a 6 segundos. Após a indexação, esse tempo cai para menos de 1 segundo, atendendo ao critério de `queries rápidas`.
+
+5.  **Estado Global de Data**
+    * **Decisão:** O Seletor de Período (`DateRangePicker`) foi colocado no topo da página e seu estado controla *tanto* os KPIs quanto as consultas de análise.
+    * **Justificativa:** Isso atende diretamente ao critério de `Ver overview do faturamento do mês` e garante que toda a página de análise seja unificada, permitindo `comparações temporais` consistentes.

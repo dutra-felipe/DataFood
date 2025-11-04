@@ -1,9 +1,8 @@
-/* frontend/src/components/ThemeToggle.module.css */
 .toggleButton {
   background-color: var(--color-bg-light);
   color: var(--color-text-muted);
   border: 1px solid var(--color-border);
-  border-radius: 9999px; /* Círculo */
+  border-radius: 9999px;
   width: 44px;
   height: 44px;
   display: flex;
@@ -11,7 +10,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 1.5rem; /* Tamanho do emoji */
+  font-size: 1.5rem;
 }
 
 .toggleButton:hover {

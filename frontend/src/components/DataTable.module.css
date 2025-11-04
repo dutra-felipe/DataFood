@@ -1,7 +1,6 @@
-/* frontend/src/components/DataTable.module.css */
 .tableWrapper {
   width: 100%;
-  overflow-x: auto; /* Permite rolagem horizontal em tabelas grandes */
+  overflow-x: auto;
 }
 
 .table {
@@ -16,14 +15,14 @@
   border-bottom: 1px solid var(--color-border);
   padding: 0.875rem 1.25rem;
   text-align: left;
-  white-space: nowrap; /* Impede que o texto quebre */
+  white-space: nowrap;
 }
 
 .table th {
   background-color: var(--color-bg);
   font-weight: 600;
   color: var(--color-text-muted);
-  text-transform: uppercase; /* Deixa os cabeçalhos mais "profissionais" */
+  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 

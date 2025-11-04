@@ -16,41 +16,37 @@ class DimensionField(str, Enum):
     PAYMENT_TYPE = "payment_type"
     SALE_STATUS = "sale_status"
     SALE_DATE = "sale_date"
-    DAY_OF_WEEK = "day_of_week" # Ex: Segunda, Terça
-    HOUR_OF_DAY = "hour_of_day" # Ex: 19h, 20h
+    DAY_OF_WEEK = "day_of_week"
+    HOUR_OF_DAY = "hour_of_day"
 
 class FilterOperator(str, Enum):
     EQUALS = "equals"
     NOT_EQUALS = "not_equals"
     GREATER_THAN = "greater_than"
     LESS_THAN = "less_than"
-    IN = "in" # Para listas, ex: canal IN ('iFood', 'Rappi')
+    IN = "in"
 
 class SortDirection(str, Enum):
     ASC = "asc"
     DESC = "desc"
 
-# --- Sub-modelos que compõem a requisição principal ---
-
 class Metric(BaseModel):
-    field: str  # A coluna do banco, ex: "total_amount"
+    field: str
     function: MetricFunction
-    alias: Optional[str] = None # Nome customizado para o resultado, ex: "faturamento_total"
+    alias: Optional[str] = None
 
 class Filter(BaseModel):
-    field: str # A coluna do banco, ex: "channel_id"
+    field: str
     operator: FilterOperator
-    value: Any # O valor pode ser str, int, list, etc.
+    value: Any
 
 class OrderBy(BaseModel):
-    field: str # A coluna ou alias para ordenar
+    field: str
     direction: SortDirection
 
 class TimeRangeFilter(BaseModel):
     start_date: datetime
     end_date: datetime
-
-# --- O Modelo Principal da Requisição ---
 
 class AnalyticsQuery(BaseModel):
     metrics: List[Metric]
