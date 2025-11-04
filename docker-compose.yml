@@ -55,7 +55,7 @@ services:
         sleep 5 &&
         
         echo 'Connecting to DB to create indexes...' &&
-        psql -U challenge -d challenge_db -f /app/02-indices.sql &&
+        psql -h postgres -U challenge -d challenge_db -f /app/02-indices.sql &&
         echo '--- INDEXES CREATED ---'
       "
 volumes:
